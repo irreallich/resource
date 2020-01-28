@@ -3,24 +3,34 @@ echo ""
 echo "hjwang ubuntu18 environment install started ......"
 
 echo "start basic install..."
+font="${HOME}/.fonts"
+
 work="${HOME}/work"
 config="${work}/config"
-vim_cfg="${config}/vimrc.d"
-bash_cfg="${config}/bashrc.d"
+worktest="${work}/test"
+
 src="${work}/src"
 opensource="${src}/opensource"
-font="${HOME}/.fonts"
-temp="${work}/temp"
-toolssrc="~/Downloads/tools/src"
-toolspkg="~/Downloads/tools/pkg"
+projects="${src}/projects"
 
-mkdir -p ${work} 
-mkdir -p ${config}
-mkdir -p ${src}
-mkdir -p ${opensource}
+download="${work}/download"
+learn="${download}/learn"
+doc="${download}/doc"
+tools="${download}/tools"
+toolssrc="${tools}/src"
+
+packages="${download}/packages"
+resource="${download}/resource"
+
 mkdir -p ${font}
+mkdir -p ${config}
+mkdir -p ${opensource}
+mkdir -p ${projects}
+mkdir -p ${learn}
+mkdir -p ${doc}
+mkdir -p ${packages}
+mkdir -p ${resource}
 mkdir -p ${toolssrc}
-mkdir -p ${toolspkg}
 
 export PATH=~/.local/bin/:$PATH
 
@@ -76,9 +86,9 @@ sudo timedatectl set-local-rtc true
 sudo timedatectl set-ntp true
 
 # ripgrep
-#cd ${toolspkg}
-#curl -LO https://github.com/BurntSushi/ripgrep/releases/download/11.0.2/ripgrep_11.0.2_amd64.deb
-#sudo dpkg -i ripgrep_11.0.2_amd64.deb
+cd ${packages}
+curl -LO https://github.com/BurntSushi/ripgrep/releases/download/11.0.2/ripgrep_11.0.2_amd64.deb
+sudo dpkg -i ripgrep_11.0.2_amd64.deb
 
 # universal-ctags
 cd ${toolssrc}
@@ -108,22 +118,25 @@ make
 sudo make install
 
 # for youcomplete ,reference: https://clang.llvm.org/extra/clangd/Installation.html
-sudo apt install clang-tools-8 -y
-sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-8 100
+# sudo apt install clang-tools
+# sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-8 100
 
 #for coc.nvim support: 如果需要编译安装的话需要安装下面的内容
 #安装node.js
+cd ${packages}
 wget install-node.now.sh/lts
 chmod +x lts
 sudo ./lts
 #安装yarn,用来编译coc
 wget  https://yarnpkg.com/install.sh
 chmod +x install.sh
-./install.sh
+sudo ./install.sh
+rm -rf ./lts ./install.sh
+
 
 cd ${config}
-git clone git@github.com:irreallich/vimrc.d.git
-git clone git@github.com:irreallich/res.git --recursive
+git clone git@github.com:irreallich/vimrc.d.git --recursive
+git clone git@github.com:irreallich/resource.git
 git clone git@github.com:irreallich/bashrc.d.git
 
 # just run once
@@ -155,7 +168,7 @@ sudo apt-get update -y
 sudo apt-get install flat-remix-icons -y
 
 #install vscode
-cd ~/Downloads
+cd ${packages}
 wget https://vscode.cdn.azure.cn/stable/86405ea23e3937316009fc27c9361deee66ffbf5/code_1.40.0-1573064499_amd64.deb
 sudo dpkg -i code_1.40.0-1573064499_amd64.deb
 #wps
