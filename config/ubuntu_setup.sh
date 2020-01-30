@@ -8,12 +8,18 @@ font="${HOME}/.fonts"
 work="${HOME}/work"
 config="${work}/config"
 worktest="${work}/test"
+share="${work}/share"
 
 src="${work}/src"
 opensource="${src}/opensource"
 projects="${src}/projects"
 
 download="${work}/download"
+
+ftproot="${share}/ftproot"
+tftproot="${share}/tftproot"
+nfsroot="${share}/nfsroot"
+
 learn="${download}/learn"
 doc="${download}/doc"
 tools="${download}/tools"
@@ -31,6 +37,9 @@ mkdir -p ${doc}
 mkdir -p ${packages}
 mkdir -p ${resource}
 mkdir -p ${toolssrc}
+mkdir -p ${ftproot}
+mkdir -p ${tftproot}
+mkdir -p ${nfsroot}
 
 export PATH=~/.local/bin/:$PATH
 
