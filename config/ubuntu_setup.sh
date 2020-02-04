@@ -119,10 +119,17 @@ make
 sudo make install
 
 # vim
+
+# for +clipboard support 
+sudo apt install libxt-dev  -y
+#sudo apt install libgtk2.0-dev libgnome2-dev libx11-dev -y
+
 cd ${toolssrc}
 git clone https://github.com/vim/vim.git
 cd vim
-./configure --with-features=huge --enable-multibyte --enable-cscope --enable-python3interp=yes --with-python3-config-dir=/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu/ --enable-rubyinterp=yes --enable-terminal --enable-gui=auto 
+#./configure --with-features=huge --enable-multibyte --enable-cscope --enable-python3interp=yes --with-python3-config-dir=/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu/ --enable-rubyinterp=yes --enable-terminal --enable-gui=auto 
+./configure --with-features=huge --enable-multibyte --enable-cscope --enable-gtk2-check --enable-gnome-check --with-x --enable-python3interp=yes --with-python3-config-dir=/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu/ --enable-rubyinterp=yes --enable-terminal --enable-gui=auto 
+make
 make
 sudo make install
 
