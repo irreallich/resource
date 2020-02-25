@@ -60,6 +60,7 @@ npm install -g cnpm --registry=https://registry.npm.taobao.org
 
 cd
 sudo apt install tree git unrar net-tools wget preload tig silversearcher-ag -y
+sudo apt install zsh tmux -y
 sudo apt install gcc make pkg-config cmake autoconf automake libtool -y
 sudo apt install libyaml-dev libxml2-dev libncurses5-dev -y
 sudo apt install clang-format htop glances shellcheck clang -y 
@@ -118,6 +119,12 @@ cmake ../
 make
 sudo make install
 
+cd ${toolssrc}
+git clone https://github.com/wting/autojump.git
+cd autojump
+./install.py
+
+
 # vim
 
 # for +clipboard support 
@@ -154,16 +161,17 @@ cd ${config}
 git clone git@github.com:irreallich/vimrc.d.git --recursive
 git clone git@github.com:irreallich/resource.git
 git clone git@github.com:irreallich/bashrc.d.git
+git clone https://github.com/ohmyzsh/ohmyzsh.git ./oh-my-zsh
 
 # just run once
-#echo "export WORK=\"${HOME}/work\""  >> ${HOME}/.bashrc
-#echo "source $HOME/work/config/bashrc.d/bashrc"  >> ${HOME}/.bashrc
+echo "export WORK=\"${HOME}/work\""  >> ${HOME}/.bashrc
+echo "source $HOME/work/config/bashrc.d/bashrc"  >> ${HOME}/.bashrc
 
 
 #------------------------------------------------------------------------------------------
 # for desktop
 # install
-sudo apt-get install ibus-pinyin -y
+sudo apt-get install ibus-pinyin  fonts-powerline -y
 
 #install gnome desktop
 echo "install gnome shell and tweak tool"
