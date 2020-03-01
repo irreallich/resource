@@ -161,7 +161,12 @@ cd ${config}
 git clone git@github.com:irreallich/vimrc.d.git --recursive
 git clone git@github.com:irreallich/resource.git
 git clone git@github.com:irreallich/bashrc.d.git
-git clone https://github.com/ohmyzsh/ohmyzsh.git ./oh-my-zsh
+# git clone https://github.com/ohmyzsh/ohmyzsh.git ./oh-my-zsh
+
+cd
+cp ${config}/resource/settings/tmux.conf ~/.tmux.conf
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
 
 # just run once
 echo "export WORK=\"${HOME}/work\""  >> ${HOME}/.bashrc
