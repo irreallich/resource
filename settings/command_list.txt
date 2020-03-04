@@ -1,0 +1,3 @@
+# mount windows 共享目录
+sudo mount -t cifs -o username=hjwang,dir_mode=0755,file_mode=0755,uid=1000,gid=1000 //192.168.2.115/work /home/hjwang/work/winshare
+
