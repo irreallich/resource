@@ -60,7 +60,6 @@ npm install -g cnpm --registry=https://registry.npm.taobao.org
 
 cd
 sudo apt install tree git unrar net-tools wget preload tig silversearcher-ag -y
-sudo apt install zsh tmux -y
 sudo apt install gcc make pkg-config cmake autoconf automake libtool -y
 sudo apt install libyaml-dev libxml2-dev libncurses5-dev -y
 sudo apt install clang-format htop glances shellcheck clang -y 
