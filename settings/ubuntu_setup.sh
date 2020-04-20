@@ -54,9 +54,9 @@ sudo apt upgrade -y
 
 # install npm cnpm and change npm source
 sudo apt install npm -y
-npm config set registry https://registry.npm.taobao.org
-npm config get registry
-npm install -g cnpm --registry=https://registry.npm.taobao.org
+sudo npm config set registry https://registry.npm.taobao.org
+sudo npm config get registry
+sudo npm install -g cnpm --registry=https://registry.npm.taobao.org
 
 cd
 sudo apt install tree git unrar net-tools wget preload tig silversearcher-ag -y
