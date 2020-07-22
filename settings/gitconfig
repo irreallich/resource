@@ -1,0 +1,32 @@
+[user]
+	name = irreallich
+	email = 580280@qq.com
+[color]
+	ui = auto
+	diff = auto
+	status = auto
+	branch = auto
+	interactive = auto
+[core]
+	editor = vi
+	quotepath = false 
+	autocrlf = false 
+	safecrlf = true
+	fileMode = false 
+	ignorecase = false 
+	encoding = utf-8 
+[i18n "commit"]
+	encoding = utf-8
+[i18n]
+	logoutputencoding = utf-8
+[diff]
+	tool = bcompare
+[merge]
+	tool = bcompare
+[mergetool]
+	bcompare = trustExitCode
+[difftool]
+	prompt = false
+[alias]
+	dt = difftool
+	mt = mergetool

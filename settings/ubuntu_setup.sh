@@ -1,41 +1,41 @@
-#!bin/bash  
+#!/bin/bash  
 echo ""
 echo "hjwang ubuntu18 environment install started ......"
 
 echo "start basic install..."
 font="${HOME}/.fonts"
+tmux="${HOME}/.tmux"
+ssh="${HOME}/.ssh"
 
 work="${HOME}/work"
 config="${work}/config"
 worktest="${work}/test"
 share="${work}/share"
-
-src="${work}/src"
-opensource="${src}/opensource"
-projects="${src}/projects"
-
-download="${work}/download"
-
 ftproot="${share}/ftproot"
 tftproot="${share}/tftproot"
 nfsroot="${share}/nfsroot"
 
-learn="${download}/learn"
-doc="${download}/doc"
-tools="${download}/tools"
-toolssrc="${tools}/src"
+src="${work}/src"
+projects="${src}/projects"
+src_packages="${src}/packages"
+winshare="${src}/winshare"
 
-packages="${download}/packages"
-resource="${download}/resource"
+download="${work}/download"
+
+doc="${download}/doc"
+resource="${download}/tools"
+toolssrc="${tools}/src"
+packages="${tools}/packages"
 
 mkdir -p ${font}
+mkdir -p ${tmux}
+mkdir -p ${ssh}
 mkdir -p ${config}
-mkdir -p ${opensource}
 mkdir -p ${projects}
-mkdir -p ${learn}
+mkdir -p ${src_projects}
+mkdir -p ${winshare}
 mkdir -p ${doc}
 mkdir -p ${packages}
-mkdir -p ${resource}
 mkdir -p ${toolssrc}
 mkdir -p ${ftproot}
 mkdir -p ${tftproot}
@@ -46,20 +46,29 @@ export PATH=~/.local/bin/:$PATH
 # install tools 
 # change source for apt
 cd /etc/apt/
-sudo wget https://raw.githubusercontent.com/irreallich/res/master/settings/sources.list_ali
-sudo mv sources.list sources.list_original
+sudo cat > sources.list_ali << EOF
+deb http://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse
+EOF
+
+if [ ! -f "/etc/apt/sources.list_original" ]; then
+    sudo cp sources.list sources.list_original
+fi
+
 sudo cp sources.list_ali sources.list
 sudo apt update -y
 sudo apt upgrade -y
 
-# install npm cnpm and change npm source
-sudo apt install npm -y
-sudo npm config set registry https://registry.npm.taobao.org
-sudo npm config get registry
-sudo npm install -g cnpm --registry=https://registry.npm.taobao.org
-
 cd
-sudo apt install tree git unrar net-tools wget preload tig silversearcher-ag -y
+sudo apt install tree git unrar net-tools wget preload tig silversearcher-ag ripgrep -y
 sudo apt install gcc make pkg-config cmake autoconf automake libtool -y
 sudo apt install libyaml-dev libxml2-dev libncurses5-dev -y
 sudo apt install clang-format htop glances shellcheck clang -y 
@@ -79,11 +88,11 @@ if [ ! -f "${HOME}/.pip/pip.conf" ]; then
     echo "index-url = https://pypi.tuna.tsinghua.edu.cn/simple" >> ${HOME}/.pip/pip.conf
     echo "trusted-host = pypi.tuna.tsinghua.edu.cn" >> ${HOME}/.pip/pip.conf
 fi
-pip3 install -U --user setuptools pygments testresources pylint autopep8 vim-vint pynvim
+python -m pip  install -U --user setuptools pygments testresources pylint autopep8 vim-vint pynvim
 
 # for language server 
-pip3 install -U --user fortran-language-server
-pip3 install -U --user python-language-server
+python -m pip install -U --user fortran-language-server
+python -m pip install -U --user python-language-server
 # ref: https://github.com/mads-hartmann/bash-language-server
 sudo npm i -g bash-language-server
 
@@ -94,10 +103,29 @@ sudo service ssh start
 sudo timedatectl set-local-rtc true
 sudo timedatectl set-ntp true
 
+cd ${config}
+git clone git@github.com:irreallich/vimrc.d.git --recursive
+git clone git@github.com:irreallich/resource.git
+git clone git@github.com:irreallich/bashrc.d.git
+# git clone https://github.com/ohmyzsh/ohmyzsh.git ./oh-my-zsh
+
+
+cd
+if [ ! -f "${HOME}/.tmux.conf" ]; then
+    cp ${config}/resource/settings/tmux.conf ~/.tmux.conf
+    git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
+    # just run once
+    echo "export WORK=\"${HOME}/work\""  >> ${HOME}/.bashrc
+    echo "source $HOME/work/config/bashrc.d/bashrc"  >> ${HOME}/.bashrc
+    echo "source $HOME/work/config/vimrc.d/vimrc" >> ${HOME}/.vimrc
+fi
+
+
 # ripgrep
 cd ${packages}
-curl -LO https://github.com/BurntSushi/ripgrep/releases/download/11.0.2/ripgrep_11.0.2_amd64.deb
-sudo dpkg -i ripgrep_11.0.2_amd64.deb
+curl -LO https://github.com/BurntSushi/ripgrep/releases/download/12.0.1/ripgrep_12.0.1_amd64.deb
+sudo dpkg -i ripgrep_12.0.1_amd64.deb
 
 # universal-ctags
 cd ${toolssrc}
@@ -127,14 +155,13 @@ cd autojump
 # vim
 
 # for +clipboard support 
-sudo apt install libxt-dev  -y
-#sudo apt install libgtk2.0-dev libgnome2-dev libx11-dev -y
+# sudo apt install libxt-dev  -y
+# sudo apt install libgtk2.0-dev libgnome2-dev libx11-dev -y
 
 cd ${toolssrc}
 git clone https://github.com/vim/vim.git
 cd vim
-#./configure --with-features=huge --enable-multibyte --enable-cscope --enable-python3interp=yes --with-python3-config-dir=/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu/ --enable-rubyinterp=yes --enable-terminal --enable-gui=auto 
-./configure --with-features=huge --enable-multibyte --enable-cscope --enable-gtk2-check --enable-gnome-check --with-x --enable-python3interp=yes --with-python3-config-dir=/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu/ --enable-rubyinterp=yes --enable-terminal --enable-gui=auto 
+./configure --with-features=huge --enable-multibyte --enable-cscope --enable-gtk2-check --enable-gnome-check --enable-python3interp=yes  --enable-rubyinterp=yes --enable-terminal --enable-gui=auto --with-python3-config-dir=/usr/lib/python3.7/config-3.7m-x86_64-linux-gnu/
 make
 make
 sudo make install
@@ -156,21 +183,12 @@ sudo ./install.sh
 rm -rf ./lts ./install.sh
 
 
-cd ${config}
-git clone git@github.com:irreallich/vimrc.d.git --recursive
-git clone git@github.com:irreallich/resource.git
-git clone git@github.com:irreallich/bashrc.d.git
-# git clone https://github.com/ohmyzsh/ohmyzsh.git ./oh-my-zsh
 
-cd
-cp ${config}/resource/settings/tmux.conf ~/.tmux.conf
-git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-
-
-# just run once
-echo "export WORK=\"${HOME}/work\""  >> ${HOME}/.bashrc
-echo "source $HOME/work/config/bashrc.d/bashrc"  >> ${HOME}/.bashrc
-
+# install npm cnpm and change npm source
+sudo apt install npm -y
+sudo npm config set registry https://registry.npm.taobao.org
+sudo npm config get registry
+sudo npm install -g cnpm --registry=https://registry.npm.taobao.org
 
 #------------------------------------------------------------------------------------------
 # for desktop
@@ -179,9 +197,11 @@ sudo apt-get install ibus-pinyin  fonts-powerline -y
 
 #install gnome desktop
 echo "install gnome shell and tweak tool"
+sudo apt install gnome-tweak-tool
 sudo apt-get install gnome-session -y
-sudo apt-get install gnome-tweak-tool -y
 sudo apt-get install gnome-shell-extensions -y
+# 安装全部gnome插件
+#sudo apt install $(apt search gnome-shell-extension | grep ^gnome | cut -d / -f1)
 
 # install gnome arc theme
 echo "install gnome arc theme"
